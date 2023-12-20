@@ -4,12 +4,14 @@ import com.ouhami.dentalbackend.entities.Tooth;
 import com.ouhami.dentalbackend.services.ToothService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
-@RestController
+@Controller
 @RequestMapping("/tooths")
 public class ToothController {
 
@@ -17,8 +19,11 @@ public class ToothController {
     private ToothService toothService;
 
     @GetMapping
-    public List<Tooth> getAllTooths() {
-        return toothService.getAllTooths();
+    public String getAllTooths(Model model) {
+        List<Tooth> teeth = toothService.getAllTooths();
+        model.addAttribute("tooths", teeth);
+        model.addAttribute("tooth", new Tooth()); // Add an empty Tooth object for the form
+        return "/tooth/List";
     }
 
     @GetMapping("/{id}")
@@ -28,14 +33,15 @@ public class ToothController {
     }
 
     @PostMapping
-    public ResponseEntity<Tooth> saveTooth(@RequestBody Tooth tooth) {
+    public String saveTooth(@ModelAttribute Tooth tooth) {
         Tooth savedTooth = toothService.saveTooth(tooth);
-        return ResponseEntity.ok(savedTooth);
+        // Redirect to the tooth list page after saving
+        return "redirect:/tooths";
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTooth(@PathVariable Integer id) {
+    @PostMapping("/{id}")
+    public String deleteTooth(@PathVariable Integer id) {
         toothService.deleteTooth(id);
-        return ResponseEntity.noContent().build();
+        return "redirect:/tooths";
     }
 }

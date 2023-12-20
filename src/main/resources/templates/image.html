@@ -1,0 +1,16 @@
+<!-- src/main/resources/templates/image.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Image Processing</title>
+</head>
+<body>
+    <h1>Image Processing</h1>
+    <form method="post" action="/students/imageProcessing" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*" required/>
+        <button type="submit">Process Image</button>
+    </form>
+    <p th:if="${message}" th:text="${message}"></p>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!-- src/main/resources/templates/studentPW/List.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>StudentPW List</title>
+  </head>
+  <body>
+    <div th:replace="fragments/sidepanel"></div>
+    <h1>StudentPW List</h1>
+
+    <h2>Add New StudentPW</h2>
+    <form th:action="@{/studentPWs}" method="post" th:object="${studentPW}">
+      <!-- Input fields for StudentPW attributes -->
+      <label for="studentId">Student ID:</label>
+      <input type="text" th:field="*{id.student}" id="studentId" required />
+
+      <label for="pwId">PW ID:</label>
+      <input type="text" th:field="*{id.pw}" id="pwId" required />
+
+      <label for="time">Time:</label>
+      <input type="text" th:field="*{time}" id="time" required />
+
+      <label for="imageFront">Image Front:</label>
+      <input type="text" th:field="*{imageFront}" id="imageFront" required />
+
+      <label for="imageSide">Image Side:</label>
+      <input type="text" th:field="*{imageSide}" id="imageSide" required />
+
+      <label for="date">Date:</label>
+      <input type="text" th:field="*{date}" id="date" required />
+
+      <!-- Submit button -->
+      <button type="submit">Add StudentPW</button>
+    </form>
+
+    <!-- Table to display the list of StudentPWs -->
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>PW</th>
+          <th>Time</th>
+          <th>Image Front</th>
+          <th>Image Side</th>
+          <th>Date</th>
+          <th>Action</th>
+          <!-- New column for delete action -->
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Use Thymeleaf to iterate through the list of StudentPWs -->
+        <tr th:each="studentPW : ${studentPWs}">
+          <td th:text="${studentPW.id.student.firstName}"></td>
+          <td th:text="${studentPW.id.pw.title}"></td>
+          <td th:text="${studentPW.time}"></td>
+          <td th:text="${studentPW.imageFront}"></td>
+          <td th:text="${studentPW.imageSide}"></td>
+          <td th:text="${studentPW.date}"></td>
+          <td>
+            <form
+              th:action="@{'/studentPWs/' + ${studentPW.id.student} + '/' + ${studentPW.id.pw}}"
+              method="post"
+            >
+              <button type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

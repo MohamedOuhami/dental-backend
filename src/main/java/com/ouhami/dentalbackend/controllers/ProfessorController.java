@@ -4,12 +4,14 @@ import com.ouhami.dentalbackend.entities.Professor;
 import com.ouhami.dentalbackend.services.ProfessorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
-@RestController
+@Controller
 @RequestMapping("/professors")
 public class ProfessorController {
 
@@ -17,8 +19,11 @@ public class ProfessorController {
     private ProfessorService professorService;
 
     @GetMapping
-    public List<Professor> getAllProfessors() {
-        return professorService.getAllProfessors();
+    public String getAllProfessors(Model model) {
+        List<Professor> professors = professorService.getAllProfessors();
+        model.addAttribute("professors", professors);
+        model.addAttribute("professor", new Professor()); // Add an empty Professor object for the form
+        return "/professor/List";
     }
 
     @GetMapping("/{id}")
@@ -28,14 +33,15 @@ public class ProfessorController {
     }
 
     @PostMapping
-    public ResponseEntity<Professor> saveProfessor(@RequestBody Professor professor) {
+    public String saveProfessor(@ModelAttribute Professor professor) {
         Professor savedProfessor = professorService.saveProfessor(professor);
-        return ResponseEntity.ok(savedProfessor);
+        // Redirect to the professor list page after saving
+        return "redirect:/professors";
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProfessor(@PathVariable Integer id) {
+    @PostMapping("/{id}")
+    public String deleteProfessor(@PathVariable Integer id) {
         professorService.deleteProfessor(id);
-        return ResponseEntity.noContent().build();
+        return "redirect:/professors";
     }
 }

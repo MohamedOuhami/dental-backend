@@ -1,0 +1,70 @@
+<!-- src/main/resources/templates/processedImage.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Processed Image</title>
+    <style>
+      #imageProcessedContainer {
+        position: relative;
+        cursor: crosshair;
+        display: inline-block; /* Ensure the container only takes as much width as the content */
+      }
+
+      #processedImage {
+        z-index: 1; /* Ensure the image is below the red points */
+      }
+
+      .red-point {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        z-index: 2; /* Set a higher z-index to make points appear above the image */
+        background-color: red;
+        border-radius: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Processed Image</h1>
+    <div id="imageProcessedContainer">
+      <img
+        th:src="@{'/images/processed_image.jpg'}"
+        id="processedImage"
+        alt="Processed Image"
+      />
+    </div>
+    <h1 th:text="${original_image}"></h1>
+
+    <!-- Add a button to trigger the POST request -->
+    <form th:action="@{/studentPWs}" method="post">
+      <!-- Hidden input fields for imageFront and imageSide -->
+      <input type="hidden" name="imageFront" th:value="${original_image}" />
+      <input type="hidden" name="imageFront" th:value="${original_image}" />
+      <input type="hidden" name="imageSide" th:value="${original_image}" />
+
+      <!-- Hidden input fields for student and pw IDs -->
+      <input type="hidden" name="id.student" value="1" />
+      <input type="hidden" name="id.pw" value="1" />
+
+      <!-- Hidden input field for time -->
+      <input
+        type="hidden"
+        name="time"
+        th:value="${#dates.format(#dates.createNow(), 'HH:mm:ss')}"
+      />
+
+      <!-- Hidden input field for date -->
+      <input
+        type="hidden"
+        name="date"
+        th:value="${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+      />
+
+      <!-- Submit button -->
+      <button type="submit">Add StudentPW</button>
+    </form>
+
+    <script th:fragment="script" src="/js/addRedPoints.js"></script>
+  </body>
+</html>
